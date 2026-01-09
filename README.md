@@ -144,15 +144,14 @@ Nach dem Start läuft das System kontinuierlich im Hintergrund.
 *(Screenshots sind im Repository abgelegt)*
 
 ---
-
 ## Technische Herausforderung: Server-Anbindung (Infomaniak) & Automatisierung
 
-Die Anbindung von TouchDesigner an die Website war einer der anspruchsvollsten Teile des Projekts.  
+Die Anbindung von TouchDesigner an die Website war der anspruchsvollsten Teile des Projekts. 
 Da wir **Infomaniak** als Hosting-Anbieter nutzen, konnten wir keinen einfachen HTTP-Upload oder eine fertige Upload-API verwenden. Für unser Setup war der zuverlässigste Weg:
 
-- **SSH** (Shell-Zugriff)
-- **SFTP** (File Transfer über SSH)
-- **MySQL** Zugriff über den Server
+- **SSH** (Shell-Zugriff)  
+- **SFTP** (File Transfer über SSH)  
+- **MySQL** Zugriff über den Server  
 
 Deshalb wurde eine eigene Upload-Pipeline in TouchDesigner (Python) umgesetzt: TouchDesigner verbindet sich direkt mit dem Server, lädt Clips hoch und schreibt anschließend einen Eintrag in die Datenbank.
 
@@ -163,37 +162,69 @@ Deshalb wurde eine eigene Upload-Pipeline in TouchDesigner (Python) umgesetzt: T
 Sobald TouchDesigner einen neuen Clip lokal gespeichert hat, startet automatisch folgende Kette:
 
 ### 1) Upload per SFTP (über SSH)
-TouchDesigner baut eine SSH-Verbindung zum Server auf und lädt den Clip per **SFTP** in ein definiertes Web-Verzeichnis hoch (z.B. `/www/pics_from_td/`).
+TouchDesigner baut eine SSH-Verbindung zum Server auf und lädt den Clip per **SFTP** in ein definiertes Web-Verzeichnis hoch (z. B. /pics_from_td/).
 
 ### 2) Öffentliche URL generieren
-Aus dem Upload-Pfad und der Base-URL wird die öffentliche Clip-URL erzeugt, z.B.:
-
-`https://funsaver.ch/pics_from_td/clip_0123.mp4`
+Aus dem Upload-Pfad und der Base-URL wird automatisch die öffentliche Clip-URL erzeugt, z. B.: /funsaver.ch/pics_from_td/clip_0123.mp4
 
 ### 3) Eintrag in die MySQL-Datenbank
-Damit die Website den Clip kennt und anzeigen kann, wird die URL in eine Tabelle (z.B. `records`) geschrieben:
+Damit die Website den Clip kennt und anzeigen kann, wird diese URL in eine Datenbanktabelle geschrieben (z. B. `records`):
 
 sql
-INSERT INTO records (url) VALUES (https://funsaver.ch/pics_from_td/clip_0123.mp4);
+INSERT INTO records (url) VALUES (//funsaver.ch/pics_from_td/clip_0123.mp4);
+
+---
+
+## Trigger-Punkt in TouchDesigner
+
+Der Übergang vom lokalen Clip zum Server-Upload wird in TouchDesigner über einen **CHOP Execute DAT** ausgelöst:
+
+```python
+def onOffToOn(channel, sampleIndex, val, prev):
+    local_filepath = "demopic.png"
+    parent().Upload_and_insertDB(local_filepath)
+    return
+```
+
+Dieser Code wird ausgeführt, wenn ein CHOP-Signal von **0 auf 1** wechselt (z. B. Button oder neuer Clip).  
+Dabei wird der komplette Server-Workflow gestartet:
+SSH-Verbindung → Upload → URL-Erzeugung → Datenbank-Insert.
+
+---
 
 ## Wie die Website die Clips anzeigt
 
-Die Website lädt keine Dateien hoch, sondern arbeitet datenbankbasiert:
+Die Website lädt keine Dateien hoch, sondern arbeitet vollständig datenbankbasiert:
 
-1. Beim Laden der Seite fragt die Website die **Datenbank** ab  
-   (Liste aus URLs + Timestamp/Metadaten).
-2. Für jeden Eintrag prüft die Website serverseitig, ob die Datei unter der URL tatsächlich existiert.
-3. Anschliessend werden die Clips **nach Timestamp sortiert** und angezeigt (neueste zuerst).
+1. Beim Laden der Seite fragt die Website die **Datenbank** ab (Liste aus URLs + Timestamp).
+2. Für jeden Eintrag prüft die Website serverseitig, ob die Datei unter der URL existiert.
+3. Die Clips werden **nach Timestamp sortiert** (neueste zuerst) und angezeigt.
 
-So entsteht eine robuste Trennung:
+So entsteht eine klare Trennung:
 
-- **TouchDesigner** erzeugt Clips, triggert den Upload und schreibt den DB-Eintrag  
+- **TouchDesigner** erzeugt Clips, triggert Upload und schreibt den DB-Eintrag  
 - **Server** speichert Dateien und Datenbank  
-- **Website** zeigt nur das an, was in der Datenbank steht (und tatsächlich vorhanden ist)
+- **Website** zeigt nur das an, was in der Datenbank steht und existiert  
+
+---
+
+## Pipeline
+
+```
+Knopfdruck → Clip speichern → SSH/SFTP Upload → DB INSERT → 
+Website liest DB → Datei-Check → Sortierung nach Timestamp → Anzeige
+```
 
 ---
 
 ## Projektfazit
 
-Der FunSaver ist ein leichtgewichtiges, performantes und erweiterbares End-to-End-System, das zeigt, wie interaktives Design, Hardware-Input und audiovisuelle Live-Software sinnvoll zusammenspielen können.
+Der FunSaver ist ein leichtgewichtiges, performantes und erweiterbares End-to-End-System, das zeigt, wie interaktives Design, Hardware-Input und audiovisuelle Live-Software sinnvoll zusammenspielen können.  
 Er macht Spielmomente sichtbar – und hörbar erlebbar – genau in dem Moment, in dem sie entstehen, und trägt sie ohne Umwege ins Web.
+
+Gleichzeitig war die Umsetzung technisch deutlich anspruchsvoller als ursprünglich erwartet. Durch das Hosting bei **Infomaniak** war eine einfache Upload-Lösung nicht möglich, was zu einer vergleichsweise komplexen SSH-/SFTP-/Datenbank-Pipeline führte. Diese zusätzliche technische Hürde verkopmplizierte einiges und machte die Entwicklung deutlich aufwendiger als geplant. Ohne die Unterstützung von **Jan** und seine Tutorials wäre dieser Teil kaum umsetzbar gewesen – allein das vollständige Verstehen und Nachvollziehen des Codes im TD hat mehrere Stunden in Anspruch genommen.
+
+Umso grösser war der Moment, als am Ende alles funktionierte: Der Knopfdruck, der Clip, der Upload, der Datenbankeintrag und die Anzeige auf der Website griffen erstmals nahtlos ineinander. Dieser Erfolgsmoment machte die gesamte Komplexität plötzlich greifbar und lohnend.
+
+Das Projekt bot uns die Möglichkeit, **alles bisher gelernte anzuwenden** – von Interaction Design über audiovisuelle Live-Software bis hin zu Server- und Webintegration. Es war ein Projekt, in dem wir nicht nur technische Fähigkeiten zeigen konnten, sondern auch unsere **kreative Vorstellungskraft** voll ausspielen durften.
+
