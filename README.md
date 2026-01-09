@@ -1,5 +1,3 @@
-<img width="1697" height="875" alt="Bildschirmfoto 2026-01-10 um 00 10 20" src="https://github.com/user-attachments/assets/87ac8739-3ba7-4d9d-b52b-9849443ad90a" /># IM5_funsaver
-
 **FunSaver – IM5 Projekt: Leistungsnachweis Interaktive Medien V**  
 von Cyrill Felder und Nick Steinmann
 
