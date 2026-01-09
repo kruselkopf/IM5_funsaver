@@ -1,9 +1,12 @@
-# IM5_funsaver
+<img width="1697" height="875" alt="Bildschirmfoto 2026-01-10 um 00 10 20" src="https://github.com/user-attachments/assets/87ac8739-3ba7-4d9d-b52b-9849443ad90a" /># IM5_funsaver
 
-**FunSaver – IM5 Projekt: Leistungsnachweis Interaktive Medienn V**  
+**FunSaver – IM5 Projekt: Leistungsnachweis Interaktive Medien V**  
 von Cyrill Felder und Nick Steinmann
 
+(Partnerprojekt mit Simon Huber, Webdesign)
+
 ---
+<img width="1681" height="881" alt="Bildschirmfoto 2026-01-10 um 00 07 38" src="https://github.com/user-attachments/assets/9632cb97-d078-451a-aa0c-ea9249fe31e0" />
 
 ## Projektidee
 
@@ -135,13 +138,31 @@ Nach dem Start läuft das System kontinuierlich im Hintergrund.
 
 ---
 
-## Screenshots
+## Screenshots & Bilder
 
-- TouchDesigner Network (Video-, Trigger- und Audio-Feedback-Logik)  
-- Buffer- und Recording-Flow  
-- Upload- und Weiterverarbeitungssektion  
+Im Rahmen dieses Projektes wurde ein Prototyp entwickelt. Ein entgültiges herzustellen Produkt liegt nicht im Rahmen dieses Leistungsnachweises. 
+Dennoch konnten wir alle Funktionen mit Hilfe einer Kartonschaschtel und Plastikstande aufbauen und Testvideos aufnehmen.
 
-*(Screenshots sind im Repository abgelegt)*
+Detailiere Aufnahmen und Funktion ist auf unserer Website zu finden: (https://funsaver.ch/anleitung)
+
+Prototyp
+<img width="1697" height="875" alt="Bildschirmfoto 2026-01-10 um 00 10 20" src="https://github.com/user-attachments/assets/5ef8d5b6-fe0c-4d32-b85c-ab2098484842" />
+
+<img width="1520" height="881" alt="Bildschirmfoto 2026-01-10 um 00 10 31" src="https://github.com/user-attachments/assets/ff631fd0-4126-44c9-9a93-556dc7aa7970" />
+
+Mikrofon zum Anfeuern der Spielenden
+<img width="1637" height="1099" alt="Bildschirmfoto 2026-01-10 um 00 10 41" src="https://github.com/user-attachments/assets/cdae6301-3040-48c0-b869-e73bbff0b95a" />
+
+
+
+
+Mikrofon und Webcam für den Prototypen haben wir billig im Brokenhaus gefunden. 
+![IMG_3656](https://github.com/user-attachments/assets/e2b81be3-d822-40cf-9d91-ff467efec6fa)
+
+Unser Touchdesigner Projekt 
+<img width="1575" height="926" alt="Bildschirmfoto 2026-01-10 um 00 06 42" src="https://github.com/user-attachments/assets/0727d3f0-ab8d-42c0-8db2-4848a10561ef" />
+
+
 
 ---
 ## Technische Herausforderung: Server-Anbindung (Infomaniak) & Automatisierung
@@ -226,5 +247,7 @@ Gleichzeitig war die Umsetzung technisch deutlich anspruchsvoller als ursprüngl
 
 Umso grösser war der Moment, als am Ende alles funktionierte: Der Knopfdruck, der Clip, der Upload, der Datenbankeintrag und die Anzeige auf der Website griffen erstmals nahtlos ineinander. Dieser Erfolgsmoment machte die gesamte Komplexität plötzlich greifbar und lohnend.
 
-Das Projekt bot uns die Möglichkeit, **alles bisher gelernte anzuwenden** – von Interaction Design über audiovisuelle Live-Software bis hin zu Server- und Webintegration. Es war ein Projekt, in dem wir nicht nur technische Fähigkeiten zeigen konnten, sondern auch unsere **kreative Vorstellungskraft** voll ausspielen durften.
+Das Projekt bot uns die Möglichkeit, **alles bisher gelernte anzuwenden** – von Interaction Design über audiovisuelle Live-Software bis hin zu Server- und Webintegration. Es war ein Projekt, in dem wir nicht nur technische Fähigkeiten zeigen konnten, sondern auch unsere **kreative Vorstellungskraft** voll ausspielen durften. 
+
+Wir bedanken uns herzlich bei Jan für die tolle Unterstützung und Motivation am Projekt/Idee festzuhalten. 
 
