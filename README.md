@@ -115,18 +115,21 @@ Die Website dient als zentrale Plattform zur Ansicht der gespeicherten Spielmome
 - Webcam
 - kleines Microfon
 - Physischer Button (über Serial Input)
-- Screens/Beamer für Video-Feedback Out
+- Screen/Beamer für Video-Feedback Out
 
 
 ---
 
 ## Setup
 
-1. TouchDesigner öffnen  
-2. Projektdatei laden  
-3. Webcam auswählen  
-4. Speicherpfad und Upload-Ziel definieren  
-5. Button oder Tastatur-Trigger aktivieren  
+1. Alle Inhalte von Github herunterladen
+2. TouchDesigner öffnen  
+3. Projektdatei laden  
+4. Webcam auswählen
+5. optional Screen/Beamer hinzufügen
+6. Datei Motivation4.wav neu verknüpfen bei Audio-Feedback (Audio File out)
+7. Speicherpfad und Upload-Ziel definieren  
+8. Button oder Tastatur-Trigger aktivieren  
 
 Nach dem Start läuft das System kontinuierlich im Hintergrund.
 
@@ -139,6 +142,54 @@ Nach dem Start läuft das System kontinuierlich im Hintergrund.
 - Upload- und Weiterverarbeitungssektion  
 
 *(Screenshots sind im Repository abgelegt)*
+
+---
+
+## Technische Herausforderung: Server-Anbindung (Infomaniak) & Automatisierung
+
+Die Anbindung von TouchDesigner an die Website war einer der anspruchsvollsten Teile des Projekts.  
+Da wir **Infomaniak** als Hosting-Anbieter nutzen, konnten wir keinen einfachen HTTP-Upload oder eine fertige Upload-API verwenden. Für unser Setup war der zuverlässigste Weg:
+
+- **SSH** (Shell-Zugriff)
+- **SFTP** (File Transfer über SSH)
+- **MySQL** Zugriff über den Server
+
+Deshalb wurde eine eigene Upload-Pipeline in TouchDesigner (Python) umgesetzt: TouchDesigner verbindet sich direkt mit dem Server, lädt Clips hoch und schreibt anschließend einen Eintrag in die Datenbank.
+
+---
+
+## Upload- & Datenbank-Workflow (End-to-End)
+
+Sobald TouchDesigner einen neuen Clip lokal gespeichert hat, startet automatisch folgende Kette:
+
+### 1) Upload per SFTP (über SSH)
+TouchDesigner baut eine SSH-Verbindung zum Server auf und lädt den Clip per **SFTP** in ein definiertes Web-Verzeichnis hoch (z.B. `/www/pics_from_td/`).
+
+### 2) Öffentliche URL generieren
+Aus dem Upload-Pfad und der Base-URL wird die öffentliche Clip-URL erzeugt, z.B.:
+
+`https://funsaver.ch/pics_from_td/clip_0123.mp4`
+
+### 3) Eintrag in die MySQL-Datenbank
+Damit die Website den Clip kennt und anzeigen kann, wird die URL in eine Tabelle (z.B. `records`) geschrieben:
+
+sql
+INSERT INTO records (url) VALUES (https://funsaver.ch/pics_from_td/clip_0123.mp4);
+
+## Wie die Website die Clips anzeigt
+
+Die Website lädt keine Dateien hoch, sondern arbeitet datenbankbasiert:
+
+1. Beim Laden der Seite fragt die Website die **Datenbank** ab  
+   (Liste aus URLs + Timestamp/Metadaten).
+2. Für jeden Eintrag prüft die Website serverseitig, ob die Datei unter der URL tatsächlich existiert.
+3. Anschliessend werden die Clips **nach Timestamp sortiert** und angezeigt (neueste zuerst).
+
+So entsteht eine robuste Trennung:
+
+- **TouchDesigner** erzeugt Clips, triggert den Upload und schreibt den DB-Eintrag  
+- **Server** speichert Dateien und Datenbank  
+- **Website** zeigt nur das an, was in der Datenbank steht (und tatsächlich vorhanden ist)
 
 ---
 
