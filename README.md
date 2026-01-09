@@ -1,6 +1,6 @@
 # IM5_funsaver
 
-**FunSaver – IM5 Projekt: Leistungsnachweis Interaktive Median V**  
+**FunSaver – IM5 Projekt: Leistungsnachweis Interaktive Medienn V**  
 von Cyrill Felder und Nick Steinmann
 
 ---
